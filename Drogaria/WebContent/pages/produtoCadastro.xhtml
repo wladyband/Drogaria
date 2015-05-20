@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/modeloGeral.xhtml">
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="proacao" value="#{produtoBean.acao}" />
+			<f:viewParam name="procod" value="#{produtoBean.codigo}" />
+			<f:event listener="#{produtoBean.carregarCadastro}"
+				type="preRenderView" />
+		</f:metadata>
+	</ui:define>
+
+
+	<ui:define name="conteudo">
+		<h:form id="frmFabCad"  enctype="multipart/form-data">
+			<p:toolbar>
+				<f:facet name="left">
+					<h:outputText value="Produto" />
+				</f:facet>
+			</p:toolbar>
+
+			<h:panelGrid id="pnlProCadDados" columns="2">
+				<p:outputLabel value="codigo" />
+				<p:inputText size="10" readonly="true"
+					value="#{produtoBean.produtoCadastro.codigo}" />
+
+				<p:outputLabel value="Descrição:" />
+				<p:inputText maxlength="50" size="30"
+					value="#{produtoBean.produtoCadastro.descricao}"
+					readonly="#{produtoBean.acao == 'Excluir'}">
+					<f:validateBean />
+				</p:inputText>
+
+				<p:outputLabel value="Foto do produto:" />
+				<p:fileUpload value="#{fileuploadBean.file}" mode="simple" />
+
+				<p:outputLabel value="Preço:" />
+				<p:inputText size="20" value="#{produtoBean.produtoCadastro.preco}"
+					readonly="#{produtoBean.acao == 'Excluir'}">
+					<f:validateBean />
+					<f:convertNumber minFractionDigits="2" locale="pt_BR" />
+				</p:inputText>
+
+				<p:outputLabel value="Quantidade:" />
+				<p:inputText size="20"
+					value="#{produtoBean.produtoCadastro.quantidade}"
+					readonly="#{produtoBean.acao == 'Excluir'}">
+					<f:validateBean />
+				</p:inputText>
+				<p:outputLabel value="Fabricante" />
+				<p:selectOneMenu value="#{produtoBean.produtoCadastro.fabricante}"
+					converter="fabricanteConverter">
+					<f:selectItem itemLabel="Selecione um fabricante" itemValue="" />
+					<f:selectItems value="#{produtoBean.listaFabricantes}"
+						var="fabricante" itemValue="#{fabricante}"
+						itemLabel="#{fabricante.descricao}" />
+					<f:validateBean />
+				</p:selectOneMenu>
+
+
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="5">
+				<p:commandButton value="Novo" actionListener="#{produtoBean.novo}"
+					update=":frmFabCad:pnlProCadDados"
+					rendered="#{produtoBean.acao == 'Novo'}" />
+
+				<p:commandButton value="Salvar"
+					action="#{produtoBean.salvar}"
+					actionListener="#{fileuploadBean.upload}"
+					update=":msgGlobal :frmFabCad:pnlProCadDados"
+					rendered="#{produtoBean.acao == 'Novo'}" />
+
+				<p:commandButton value="Excluir"
+					actionListener="#{produtoBean.excluir}" update=":msgGlobal"
+					rendered="#{produtoBean.acao == 'Excluir'}" />
+
+				<p:commandButton value="Editar"
+					actionListener="#{produtoBean.editar}" update=":msgGlobal"
+					rendered="#{produtoBean.acao == 'Editar'}" />
+
+				<p:button value="Voltar" outcome="/pages/produtoPesquisa.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>

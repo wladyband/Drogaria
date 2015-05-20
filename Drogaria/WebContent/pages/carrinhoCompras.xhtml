@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/modeloGeral.xhtml">
+
+
+	<ui:define name="metadata">
+
+		<f:metadata>
+			<f:viewParam name="carCod" value="#{vendaBean.codigo}" />
+			<f:event listener="#{vendaBean.carregarProdutos}"
+				type="preRenderView" />
+		</f:metadata>
+
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form>
+			<p:toolbar>
+				<f:facet name="left">
+					<h:outputText value="Carrinho" />
+				</f:facet>
+			</p:toolbar>
+
+			<p:separator />
+
+			<p:dataTable id="tblItens" emptyMessage="Nenhum registro encontrado."
+				value="#{vendaBean.listaItens}" var="item" rows="5" paginator="true">
+
+
+				<p:column headerText="Produto">
+					<h:outputText value="#{item.produto.descricao}" />
+				</p:column>
+
+				<p:column headerText="Quantidade">
+					<h:outputText value="#{item.quantidade}" />
+				</p:column>
+
+				<p:column headerText="Valor Parcial">
+					<h:outputText value="#{item.valor}">
+						<f:convertNumber type="currency" currencySymbol="R$" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Opções">
+					<p:commandButton value="Remover" ajax="false" update="growl"
+						actionListener="#{vendaBean.remover(item)}" />
+				</p:column>
+			</p:dataTable>
+
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
